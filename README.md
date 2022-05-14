@@ -51,6 +51,11 @@ sudo apt-get full-upgrade
 sudo reboot
 ```
 
+Install the packages that I need.
+```
+sudo apt-get install -y emacs
+```
+
 Invoke RaspAP's Quick Installer, and install with default settings (y)
 ```
 curl -sL https://install.raspap.com | bash
@@ -66,3 +71,27 @@ SSID: raspi-webgui
 Password: ChangeMe
 ```
 It is strongly recommended that you change these default credentials in RaspAP's Authentication and Hotspot > Security panels.
+
+
+## Install firewall
+Install ufw
+```
+sudo apt-get install -u ufw
+```
+
+Edit /etc/default/ufw and set DEFAULT_FORWARD_POLICY to ACCEPT:
+```
+sudo sh -c 'cat ufw_backup | sed s/DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=\"ACCEPT\"/ > /etc/default/ufw'
+```
+
+Configure the rules and enable
+```
+sudo ufw allow 22
+sudo ufw allow 53
+sudo ufw allow 67
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw allow 1883
+sudo ufw enable
+```
+```
