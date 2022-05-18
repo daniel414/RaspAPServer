@@ -72,11 +72,24 @@ Password: ChangeMe
 ```
 It is strongly recommended that you change these default credentials in RaspAP's Authentication and Hotspot > Security panels.
 
+## Remapping ssh port from 22 to 2022
+Plug ethernet and login through SSH
+```
+ssh daniel@10.3.141.1
+```
+Remapping ssh port to 2022 and login again
+```
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup
+sudo sh -c 'cat /etc/ssh/sshd_config_backup | sed "s/#Port 22/Port 2022\nAllowUsers daniel\n/" > /etc/ssh/sshd_config'
+sudo service ssh restart
+exit
+ssh daniel@10.3.141.1 -p 2022
+```
 
 ## Install firewall
 Install ufw
 ```
-sudo apt-get install -u ufw
+sudo apt-get install -y ufw
 ```
 
 Edit /etc/default/ufw and set DEFAULT_FORWARD_POLICY to ACCEPT:
@@ -86,11 +99,12 @@ sudo sh -c 'cat ufw_backup | sed s/DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POL
 
 Configure the rules and enable
 ```
-sudo ufw allow 22
-sudo ufw allow 53
-sudo ufw allow 67
-sudo ufw allow 80
-sudo ufw allow 443
-sudo ufw allow 1883
+sudo ufw allow 2022/tcp comment "SSH"
+sudo ufw allow 1883/tcp comment "Mosquitto"
+sudo ufw allow 53/tcp comment "DNS"
+sudo ufw allow 67/tcp comment "BootStrap Service"
+sudo ufw allow 80/tcp comment "http"
+sudo ufw allow 443/tcp comment "https"
 sudo ufw enable
+sudo ufw status
 ```
