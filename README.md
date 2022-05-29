@@ -73,6 +73,13 @@ Password: ChangeMe
 It is strongly recommended that you change these default credentials in RaspAP's Authentication and Hotspot > Security panels.
 
 
+## Edit ssh configuration
+Move ssh port 22 to 2022 
+```
+sudo cp /etc/ssh/sshd_config /etc/ssh/ssh_config_backup
+sudo sh -c 'cat /etc/ssh/sshd_config_backup | sed s/#Port.*/"Port 2022\nAllowUsers daniel"/ > /etc/ssh/_sshd_config'
+```
+
 ## Install firewall
 Install ufw
 ```
@@ -81,7 +88,8 @@ sudo apt-get install -u ufw
 
 Edit /etc/default/ufw and set DEFAULT_FORWARD_POLICY to ACCEPT:
 ```
-sudo sh -c 'cat ufw_backup | sed s/DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=\"ACCEPT\"/ > /etc/default/ufw'
+sudo cp /etc/default/ufw /etc/default/ufw_backup
+sudo sh -c 'cat /etc/default/ufw_backup | sed s/DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=\"ACCEPT\"/ > /etc/default/ufw'
 ```
 
 Configure the rules and enable
