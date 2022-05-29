@@ -106,7 +106,7 @@ sudo ufw status
 
 
 ## Reboot and login
-``
+```
 sudo reboot now
 ssh daniel@10.3.141.1 -p 2022
 ```
