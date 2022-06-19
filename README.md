@@ -94,7 +94,7 @@ sudo sh -c 'cat /etc/default/ufw_backup | sed s/DEFAULT_FORWARD_POLICY=.*/DEFAUL
 
 Configure the rules and enable
 ```
-sudo ufw allow 2022/tcp comment "SSH"
+sudo ufw allow 2022 comment "SSH"
 sudo ufw allow 1883/tcp comment "Mosquitto"
 sudo ufw allow 53 comment "DNS"
 sudo ufw allow 67 comment "BootStrap Service"
@@ -102,6 +102,47 @@ sudo ufw allow 67 comment "BootStrap Service"
 #sudo ufw allow 443 comment "https"
 sudo ufw enable
 sudo ufw status
+```
+
+## fail2ban
+Install fail2ban
+```
+sudo apt install -y fail2ban
+```
+
+Configure fail2ban
+```
+sudo emacs /etc/fail2ban/jail.local
+```
+
+Paste to jail.local
+```
+[DEFAULT]
+ignoreip = 127.0.0.1
+maxretry = 5
+findtime = 10m
+bantime = 1h
+banaction = ufw
+
+[sshd]
+enabled = true
+maxretry = 5
+findtime = 1d
+bantime = 4w
+ignoreip = 127.0.0.1
+```
+
+```
+sudo systemctl enable fail2ban
+```
+
+Note
+```
+# 查看 sshd 服務的 fail2ban 狀態
+sudo fail2ban-client status sshd
+
+# 解除 sshd 服務中阻擋的 IP 位址
+sudo fail2ban-client set sshd unbanip 10.3.141.102
 ```
 
 
